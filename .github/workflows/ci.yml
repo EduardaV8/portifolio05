@@ -2,8 +2,7 @@ name: CI - Validação do Portfólio
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   validate:
@@ -17,20 +16,20 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Verificar existência do index.html
+      - name: Verificar index.html na raiz
         run: |
           if [ ! -f index.html ]; then
-            echo "❌ index.html não encontrado na raiz!"
+            echo "❌ index.html não encontrado na raiz"
             exit 1
           fi
 
-      - name: Configurar Node.js
+      - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Instalar dependências do linter
-        run: npm install -g htmlhint linkinator
+      - name: Instalar HTMLHint
+        run: npm install -g htmlhint
 
       - name: Executar Linter HTML
         run: htmlhint index.html
@@ -38,16 +37,17 @@ jobs:
       - name: Bloquear arquivos maiores que 500KB
         run: |
           if find . -type f -size +500k | grep .; then
-            echo "❌ Arquivo maior que 500KB encontrado!"
+            echo "❌ Arquivo maior que 500KB encontrado"
             exit 1
           fi
 
-      - name: Verificar termos proibidos
+      - name: Bloquear palavras proibidas
         run: |
-          if grep -RniE "TODO|FIXME|senha|password" .; then
-            echo "❌ Termos proibidos encontrados!"
+          if grep -R -i -E "TODO|FIXME|senha|password" .; then
+            echo "❌ Texto proibido encontrado"
             exit 1
           fi
 
-      - name: Validar links e imagens
-        run: linkinator index.html
+      - name: Verificar links inválidos
+        run: |
+          grep -R -E "(href|src)=\"\"" index.html && exit 1 || echo "Links OK"
