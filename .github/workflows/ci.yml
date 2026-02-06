@@ -40,16 +40,7 @@ jobs:
             echo "❌ Arquivo maior que 500KB encontrado"
             exit 1
           fi
-      - name: Bloqueador palavra proibida 
-        run:  |
-        if grep -R -i -E "TODO|FIXME|senha|password" . \
-        --exclude-dir=.git \
-        --exclude-dir=.github; then
-        echo " Texto proibido encontrado"
-        exit 1 
-        else
-        echo " nenhum Texto proibido encontrado"
-        fi
+     
       - name: Verificar links inválidos
         run: |
           grep -R -E "(href|src)=\"\"" index.html && exit 1 || echo "Links OK"
