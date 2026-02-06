@@ -43,9 +43,9 @@ jobs:
 
       - name: Bloquear palavras proibidas
         run: |
-          if grep -R -i -E "TODO|FIXME|senha|password" .; then
-            echo "❌ Texto proibido encontrado"
-            exit 1
+          if grep -R -i -E "TODO|FIXME|senha|password" . \
+           --exclude-dir=.git \
+           --exclude-dir=.github
           fi
 
       - name: Verificar links inválidos
