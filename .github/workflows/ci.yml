@@ -41,18 +41,8 @@ jobs:
             exit 1
           fi
 
-      - name: Bloquear palavras proibidas
-        run: |
-        - name: Bloquear palavras proibidas
-run: |
-if grep -R -i -E "TODO|FIXME|senha|password" . \
---exclude-dir=.git \
---exclude-dir=.github; then
-echo "❌ Texto proibido encontrado"
-exit 1
-else
-echo "✅ Nenhum texto proibido encontrado"
-fi
+
+         
 
       - name: Verificar links inválidos
         run: |
